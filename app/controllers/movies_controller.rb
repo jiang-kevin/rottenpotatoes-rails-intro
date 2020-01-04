@@ -11,6 +11,7 @@ class MoviesController < ApplicationController
   end
 
   def index
+    @all_ratings = ['G','PG','PG-13','R']
     if params[:sort] == "title"
       @movies = Movie.order(title: :asc)
       @title_header = "hilite"
