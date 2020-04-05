@@ -14,7 +14,7 @@ class MoviesController < ApplicationController
     session[:ratings] = params[:ratings] unless params[:ratings].nil?
     session[:sort] = params[:sort] unless params[:sort].nil?
 
-    if session[:ratings].nil? && params[:ratings].nil?
+    if session[:ratings].nil?
       session[:ratings] == {"G"=>1, "PG"=>1, "PG-13"=> 1, "R"=>1}
     end
 
