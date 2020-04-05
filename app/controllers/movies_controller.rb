@@ -15,7 +15,7 @@ class MoviesController < ApplicationController
     session[:sort] = params[:sort] unless params[:sort].nil?
 
     if session[:ratings].nil?
-      session[:ratings] == {"G"=>1, "PG"=>1, "PG-13"=> 1, "R"=>1}
+      session[:ratings] = {"G"=>1, "PG"=>1, "PG-13"=> 1, "R"=>1}
     end
 
     @movies = Movie.with_ratings(session[:ratings].keys)
