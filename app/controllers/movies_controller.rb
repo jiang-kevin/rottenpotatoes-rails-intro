@@ -12,19 +12,22 @@ class MoviesController < ApplicationController
 
   def index
     @all_ratings = Movie.ratings
-
     session[:ratings] = params[:ratings] unless params[:ratings].nil?
-    session[:sort] = params[:sort] unless params[:sort].nil?
-
-    @movies = Movie.with_ratings(session[:ratings].keys)
-
-    if session[:sort] == "title"
-      @movies = @movies.sort_by { |item| item.title }
+    if params[:sort] == "title"
+      @movies = Movie.order(title: :asc)
       @title_header = "hilite"
-    elsif session[:sort] == "date"
-      @movies = @movies.sort_by { |item| item.release_date }
+    elsif params[:sort] == "date"
+      @movies = Movie.order(release_date: :asc)
       @release_date_header = "hilite"
-  end
+    else 
+      if params[:ratings] == nil
+        redirect_to movies_path("ratings" => session[:ratings])
+      end
+      if params[:ratings] == nil
+         params[:ratings] = {"G"=>"1", "PG"=>"1", "PG-13"=> "1", "R"=>"1"}
+      end
+      @movies = Movie.with_ratings(params[:ratings].keys)
+    end  end
 
   def new
     # default: render 'new' template
