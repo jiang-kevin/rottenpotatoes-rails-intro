@@ -16,21 +16,14 @@ class MoviesController < ApplicationController
     session[:ratings] = params[:ratings] unless params[:ratings].nil?
     session[:sort] = params[:sort] unless params[:sort].nil?
 
-    if params[:sort] == "title"
-      @movies = Movie.order(title: :asc)
+    @movies = Movie.with_ratings(session[:ratings].keys)
+
+    if session[:sort] == "title"
+      @movies = @movies.sort_by { |item| item.title }
       @title_header = "hilite"
-    elsif params[:sort] == "date"
-      @movies = Movie.order(release_date: :asc)
+    elsif session[:sort] == "date"
+      @movies = @movies.sort_by { |item| item.release_date }
       @release_date_header = "hilite"
-    else
-      if params[:ratings] == nil
-        redirect_to movies_path("ratings" => session[:ratings])
-      end
-      if params[:ratings] == nil
-        params[:ratings] = {"G"=>"1", "PG"=>"1", "PG-13"=>1, "R"=>"1"}
-      end
-      @movies = Movie.with_ratings(params[:ratings].keys)
-    end
   end
 
   def new
