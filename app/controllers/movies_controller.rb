@@ -18,12 +18,18 @@ class MoviesController < ApplicationController
       session[:ratings] = {"G"=>1, "PG"=>1, "PG-13"=> 1, "R"=>1}
     end
 
+    if params[:ratings].nil? || (params[:sort].nil? && !session[:sort].nil?)
+      params[:ratings] = session[:ratings]
+      params[:sort] = session[:sort]
+      redirect_to movies_path(params)
+    end
+
     @movies = Movie.with_ratings(session[:ratings].keys)
 
-    if session[:sort] == "title"
+    if params[:sort] == "title"
       @movies = @movies.sort_by { |item| item.title }
       @title_header = "hilite"
-    elsif session[:sort] == "date"
+    elsif params[:sort] == "date"
       @movies = @movies.sort_by { |item| item.release_date }
       @release_date_header = "hilite"
     end
